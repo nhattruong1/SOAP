@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Signup Page</title>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="text-center" style="margin-top: 50px">
+      <h1>Signup Page</h1>
+    </div>
+    <section style="width: 50%; margin: 0 auto">
+        <div></div>
+        <div class="form-group">
+            <label for="email">Email address:</label>
+            <input type="email" class="form-control" placeholder="Enter email" id="email">
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" class="form-control" placeholder="Enter password" id="pwd">
+        </div>
+        <button class="btn btn-primary" onclick="signup()">Signup</button>
+    </section>
+
+    <script>
+        const signup = () => {
+            let email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+            let email = document.getElementById('email').value;
+            const regex_pass = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/;
+            let passwd = document.getElementById('pwd').value;
+
+            if(email_regex.test(email) && regex_pass.test(passwd)){
+                let data = {
+                    "email": email,
+                    "password": passwd
+                }
+
+                fetch('/api/signup', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(data),
+                }).then(() => alert("Success"))
+            }else {
+                alert('false')
+            }
+        }
+    </script>
+</body>
+</html>
