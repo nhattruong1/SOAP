@@ -44,7 +44,14 @@
                     'Content-Type': 'application/json',
                   },
                   body: JSON.stringify(data),
-                }).then(() => alert("Success"))
+                }).then(response => {
+                    if (response.status === 200){
+                        alert('success')
+                        window.location.href = '/';
+                    }else {
+                        alert('Email Already Exist')
+                    }
+                })
             }else {
                 alert('false')
             }
