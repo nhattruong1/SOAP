@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, jsonify
 from flaskext.mysql import MySQL
 import hashlib
+import random
+import pymysql
 
 app = Flask(__name__)
 mysql = MySQL(app)
@@ -28,6 +30,20 @@ def hello_world():
 @app.route('/signup')
 def sign_up():
     return render_template("layout/signup.html")
+
+@app.route('/get-otp', methods=['POST'])
+def get_otp():
+    json_req = request.json
+    email = json_req['email']
+    conn = mysql.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    otp = random.randint(1000, 9999)
+    cursor.execute("SELECT * FROM `users` WHERE `email` = '{}'".format(email))
+    check_valid_user = cursor.fetchmany()
+    return jsonify(check_valid_user)
+
+    # cursor.execute("INSERT INTO `users_otp`(`user_id`, `code`, `time_expired`) VALUES ('{}','{}',now() + INTERVAL 5 MINUTE)".format(1,otp))
+
 
 
 @app.route('/api/signup', methods=['POST'])

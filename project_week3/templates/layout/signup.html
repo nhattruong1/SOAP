@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Signup Page</title>
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render=6LePBUoaAAAAAOlCA3xtzCblueDkdy9HjjBYJJfW"></script>
+
 </head>
 <body>
     <div class="text-center" style="margin-top: 50px">
@@ -22,39 +24,69 @@
             <label for="password">Password:</label>
             <input type="password" class="form-control" placeholder="Enter password" id="pwd">
         </div>
-        <button class="btn btn-primary" onclick="signup()">Signup</button>
+        <button
+                onclick="signup(event)"
+                class="g-recaptcha"
+                data-sitekey="reCAPTCHA_site_key"
+                data-callback='onSubmit'
+                data-action='submit'>
+            Signup
+        </button>
     </section>
 
     <script>
-        const signup = () => {
-            let email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
-            let email = document.getElementById('email').value;
-            const regex_pass = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/;
-            let passwd = document.getElementById('pwd').value;
+        const signup = (e) => {
+            e.preventDefault();
+            grecaptcha.ready(function() {
+              grecaptcha.execute('6LePBUoaAAAAAOlCA3xtzCblueDkdy9HjjBYJJfW', {action: 'submit'}).then(async function(token) {
+                   let verifyObject = await verify(token).then(response => response.json()).then(data => data);
+                   if(verifyObject.score >= 0.8){
+                       signupAPI()
+                   }
+              });
+            });
+        }
 
-            if(email_regex.test(email) && regex_pass.test(passwd)){
-                let data = {
-                    "email": email,
-                    "password": passwd
-                }
+        const verify = async (token) => {
+            let secret_key = '6LePBUoaAAAAAFQve1Mz2UH_5azttpBdARkErs5s';
+            let data = new FormData();
+            data.append("secret", secret_key);
+            data.append("response", token);
+            return await fetch('https://www.google.com/recaptcha/api/siteverify', {
+                method: 'post',
+                body:data
+            })
+        }
 
-                fetch('/api/signup', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify(data),
-                }).then(response => {
-                    if (response.status === 200){
-                        alert('success')
-                        window.location.href = '/';
-                    }else {
-                        alert('Email Already Exist')
+        const signupAPI = () => {
+             let email_regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+                let email = document.getElementById('email').value;
+                const regex_pass = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/;
+                let passwd = document.getElementById('pwd').value;
+
+                if(email_regex.test(email) && regex_pass.test(passwd)){
+                    let data = {
+                        "email": email,
+                        "password": passwd
                     }
-                })
-            }else {
-                alert('false')
-            }
+
+                    fetch('/api/signup', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify(data),
+                    }).then(response => {
+                        if (response.status === 200){
+                            alert('success')
+                            window.location.href = '/';
+                        }else {
+                            alert('Email Already Exist')
+                        }
+                    })
+                }else {
+                    alert('false')
+                }
         }
     </script>
 </body>
