@@ -3,6 +3,7 @@ from flaskext.mysql import MySQL
 import hashlib
 import random
 import pymysql
+import smtplib
 
 app = Flask(__name__)
 mysql = MySQL(app)
@@ -39,11 +40,39 @@ def get_otp():
     cursor = conn.cursor(pymysql.cursors.DictCursor)
     otp = random.randint(1000, 9999)
     cursor.execute("SELECT * FROM `users` WHERE `email` = '{}'".format(email))
-    check_valid_user = cursor.fetchmany()
-    return jsonify(check_valid_user)
+    conn.commit()
+    check_valid_user = cursor.fetchone()
+    id_user = (check_valid_user['id'])
 
-    # cursor.execute("INSERT INTO `users_otp`(`user_id`, `code`, `time_expired`) VALUES ('{}','{}',now() + INTERVAL 5 MINUTE)".format(1,otp))
-
+    if check_valid_user is None:
+        return not_found()
+    else:
+        FROM = 'user'
+        TO = email if isinstance(email, list) else [email]
+        SUBJECT = 'token login'
+        TEXT = otp
+        message = """From: %s\nTo: %s\nSubject: %s\n\n%s
+            """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
+        try:
+            connect = mysql.connect()
+            cursorr = connect.cursor(pymysql.cursors.DictCursor)
+            cursorr.execute("INSERT INTO `users_otp`(`user_id`, `code`) VALUES ('{}','{}')".format(id_user, otp))
+            connect.commit()
+            server = smtplib.SMTP("smtp.gmail.com", 587)
+            server.ehlo()
+            server.starttls()
+            server.login('nhattruong12c2@gmail.com', 'vonhattruong204')
+            server.sendmail(FROM, TO, message)
+            server.close()
+            message = {
+                'status': 200,
+                'message': 'Send email successfully!',
+            }
+            response = jsonify(message)
+            response.status_code = 200
+            return response
+        except:
+            return not_found()
 
 
 @app.route('/api/signup', methods=['POST'])

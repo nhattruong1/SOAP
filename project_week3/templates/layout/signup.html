@@ -42,6 +42,8 @@
                    let verifyObject = await verify(token).then(response => response.json()).then(data => data);
                    if(verifyObject.score >= 0.8){
                        signupAPI()
+                   }else {
+                       alert('robot detected!!!!')
                    }
               });
             });

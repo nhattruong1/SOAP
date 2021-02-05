@@ -23,11 +23,33 @@
             <input class="form-control" placeholder="Enter otp" id="otp">
         </div>
         <div class="form-group" style="display: flex;justify-content: space-between">
-            <p>Get OTP</p>
+            <p style="cursor: pointer;color: red" onclick="getOtp()">Get OTP</p>
 
             <a href="/signup">Sign up</a>
         </div>
         <button type="submit" class="btn btn-primary">Login</button>
     </section>
+
+    <script>
+        function getOtp(){
+            let data = {
+                        "email": document.getElementById('email'),
+            }
+            fetch('/get-otp', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(data),
+            }).then(response => {
+                if (response.status === 200){
+                    alert('success')
+                    window.location.href = '/';
+                }else {
+                    alert('Email Already Exist')
+                }
+            })
+        }
+    </script>
 </body>
 </html>
