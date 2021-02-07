@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Đăng nhập</title>
+{% endblock %}
+{% block script %}
+  <script src="/static/js/login.js"></script>
+{% endblock %}
+{% block body %}
+    <section>
+        <div class="text-center" style="margin-top: 50px">
+          <h1>Login Page</h1>
+        </div>
+        <section style="width: 50%; margin: 0 auto">
+            <div></div>
+            <div class="form-group">
+                <label for="email">Email address:</label>
+                <input type="email" class="form-control" placeholder="Enter email" id="email">
+            </div>
+            <div class="form-group">
+                <label for="pwd">Password:</label>
+                <input class="form-control" placeholder="Enter password" id="pwd">
+            </div>
+            <button class="btn btn-primary" onclick="login()">Login</button>
+        </section>
+    </section>
+{% endblock %}
