@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Danh sách môn học</title>
+{% endblock %}
+{% block script %}
+  <script src="/static/js/subjects.js"></script>
+{% endblock %}
+{% block body %}
+    <section class="container" style="margin-top: 50px">
+    <div class="alert alert-success" role="alert">
+      Danh sách môn học của {{ session['name'] }}
+    </div>
+        <div class="row">
+            {% for subject in data %}
+                <div class="col-md-4">
+                    <div class="card border-secondary mb-3" >
+                      <div class="card-header">{{ subject['subject_name']}}</div>
+                      <div class="card-body text-secondary">
+                        <h5 class="card-title">Giảng viên hướng dẫn:</h5>
+                        <p class="card-text">{{ subject['teacher']}}</p>
+                        <a href="#" class="btn btn-outline-secondary">Làm bài tập</a>
+                      </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

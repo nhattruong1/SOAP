@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Trang admin</title>
+{% endblock %}
+{% block script %}
+  <script src="/static/js/admin_home.js"></script>
+{% endblock %}
+{% block body %}
+    <section class="container" style="margin-top: 50px">
+        <div class="alert alert-danger" role="alert">
+            Trang chủ, xin chào {{ session['admin_name'] }}
+        </div>
+        <div class="row">
+            {% for data in subject %}
+                <div class="col-md-4">
+                    <div class="card border-secondary mb-3" >
+                      <div class="card-header">Lớp của bạn</div>
+                      <div class="card-body text-secondary">
+                        <h5 class="card-title">Môn học:</h5>
+                        <p class="card-text">{{ data['subject_name']}} </p>
+                        <p id="subject_id" style="display: none">{{ data['id']}}</p>
+                        <button class="btn btn-outline-secondary" data-toggle="modal" data-target="#myModal">Tạo bài trắc nghiệm</button>
+                        <button class="btn btn-outline-secondary">Chi tiết</button>
+
+                          <div id="myModal" class="modal fade" role="dialog">
+                              <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                      <p>Tạo bài trắc nghiệm môn học: <b>{{ data['subject_name']}}</b> </p>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <p><i>* Tối đa 20 câu hỏi</i></p>
+                                      <div>
+                                        <label for="content_quizz"><b>Tên bài trắc nghiệm:</b></label>
+                                        <input type="text" class="form-control" id="content_quizz">
+                                        <button type="button" class="btn btn-outline-danger" style="margin-top: 10px" onclick="addQuestion()">Thêm câu hỏi</button>
+                                      </div>
+                                      <div id="list_question" style="margin-top: 15px">
+
+                                      </div>
+                                      <button type="button" class="btn btn-outline-danger" style="margin-top: 10px" onclick="save()">Lưu</button>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                                  </div>
+                                </div>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

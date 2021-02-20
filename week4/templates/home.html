@@ -7,7 +7,9 @@
   <script src="/static/js/home.js"></script>
 {% endblock %}
 {% block body %}
-    <section>
-        <h1>Trang chủ</h1>
+    <section class="container" style="margin-top: 50px">
+        <div class="alert alert-success" role="alert">
+            Trang chủ, xin chào {{ session['name'] }}
+        </div>
     </section>
 {% endblock %}

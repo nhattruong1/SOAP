@@ -10,6 +10,52 @@
     {% block head %}{% endblock %}
 </head>
 <body>
+    {% if session['user_id'] %}
+        <nav class="navbar navbar-expand-lg navbar-light bg-light" style="padding: 8px 0">
+          <div class="container">
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <a class="navbar-brand" href="/">Week 5</a>
+
+              <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                  <li class="nav-item">
+                    <a class="nav-link" href="/subjects">Danh sách môn học <span class="sr-only">(current)</span></a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/history">Lịch sử làm bài <span class="sr-only">(current)</span></a>
+                  </li>
+
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                  <a href="/logout" class="btn btn-outline-danger my-2 my-sm-0" type="submit">Đăng xuất</a>
+                </form>
+              </div>
+          </div>
+        </nav>
+    {% endif  %}
+    {% if session['admin_id'] %}
+        <nav class="navbar navbar-expand-lg navbar-light bg-light" style="padding: 8px 0">
+          <div class="container">
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <a class="navbar-brand" href="/">Week 5</a>
+
+              <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">Admin page <span class="sr-only">(current)</span></a>
+                  </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                  <a href="/logout" class="btn btn-outline-danger my-2 my-sm-0" type="submit">Đăng xuất</a>
+                </form>
+              </div>
+          </div>
+        </nav>
+    {% endif  %}
     {% block body %}{% endblock %}
 </body>
 </html>

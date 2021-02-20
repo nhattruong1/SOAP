@@ -9,7 +9,7 @@ function login(){
             "username": username,
             "password": pwd
         }
-        fetch('/auth-login', {
+        fetch('/auth-login-admin', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -18,7 +18,7 @@ function login(){
         }).then(response => {
             if (response.status === 200){
                 alert('success')
-                window.location.href = '/';
+                window.location.href = '/admin';
             }else {
                 alert('Sai tài khoản hoặc mật khẩu')
             }
