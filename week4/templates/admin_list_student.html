@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Danh sách học sinh của bài tập: </title>
+{% endblock %}
+{% block script %}
+  <script src="/static/js/admin_list_student.js"></script>
+{% endblock %}
+{% block body %}
+    <section class="container" style="margin-top: 50px">
+        <div class="alert alert-danger" role="alert">
+            Trang chủ, xin chào {{ session['admin_name'] }}
+        </div>
+    </section>
+{% endblock %}

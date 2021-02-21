@@ -63,5 +63,45 @@ function save(){
         }
 
         console.log(JSON.stringify(object_quizz))
+        fetch('/api/add-quizz', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(object_quizz),
+        }).then(response => {
+            if (response.status === 200){
+                alert('Thêm bài tập thành công!')
+                window.location.href = '/admin';
+            }else {
+                alert('Có lỗi, vui lòng kiểm tra lại!')
+            }
+        })
     }
 }
+async function detail_subject(){
+    let subject_id = document.getElementById('subject_id').textContent;
+    let body_table = document.getElementById('body_table');
+    let data_quizz = await (await fetch(`api/get-list-quizz?subject_id=${subject_id}`, {
+        method: 'GET',
+        })).json()
+    if(data_quizz.status === 200){
+        let stt = 0;
+        data_quizz.data.map(quizz => {
+            stt++
+            body_table.innerHTML+= `
+              <tr>
+                <td style="text-align: center">${stt}</td>
+                <td>${quizz.name}</td>
+                <td>
+                    <a href="/list-student?quizz_id=${quizz.id}" type="button" class="btn btn-outline-danger btn-sm">Xem danh sách học sinh</a>
+                </td>
+              </tr>
+            `
+        })
+    }else {
+        alert('load data fail')
+    }
+}
+
+window.onload = detail_subject

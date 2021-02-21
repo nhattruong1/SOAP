@@ -21,7 +21,7 @@
                         <p class="card-text">{{ data['subject_name']}} </p>
                         <p id="subject_id" style="display: none">{{ data['id']}}</p>
                         <button class="btn btn-outline-secondary" data-toggle="modal" data-target="#myModal">Tạo bài trắc nghiệm</button>
-                        <button class="btn btn-outline-secondary">Chi tiết</button>
+                        <button class="btn btn-outline-secondary" data-toggle="modal" data-target="#myModal1">Chi tiết</button>
 
                           <div id="myModal" class="modal fade" role="dialog">
                               <div class="modal-dialog modal-lg">
@@ -48,6 +48,36 @@
                                 </div>
                               </div>
                           </div>
+                          <div id="myModal1" class="modal fade" role="dialog">
+                              <div class="modal-dialog modal-lg">
+
+                                <!-- Modal content-->
+                                <div class="modal-content ">
+                                  <div class="modal-header">
+                                    <p>Danh sách bài trắc nghiệm môn học: <b>{{ data['subject_name']}}</b> </p>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <table class="table table-striped">
+                                        <thead>
+                                          <tr>
+                                            <th>STT</th>
+                                            <th>Tên bài</th>
+                                            <th>Thao tác</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody id="body_table">
+
+                                        </tbody>
+                                      </table>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                  </div>
+                                </div>
+
+                              </div>
+                            </div>
                       </div>
                     </div>
                 </div>

@@ -3,6 +3,7 @@ from flaskext.mysql import MySQL
 import pymysql
 
 app = Flask(__name__)
+app.config['JSON_SORT_KEYS'] = False
 app.secret_key = "abc"
 mysql = MySQL(app)
 app.config['MYSQL_DATABASE_USER'] = 'truong'
@@ -187,5 +188,92 @@ def add_answer(id_question,answer):
     connect.commit()
     return 1
 
+@app.route("/api/get-list-quizz")
+def get_list_quizz():
+    subject_id = request.args.get('subject_id')
+    conn = mysql.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    if subject_id is None:
+        message_send = "get data all!"
+        cursor.execute("SELECT * FROM `soap_quizz`")
+    else:
+        subject_name = get_subject_name(subject_id)
+        message_send = "get data subject {}".format(subject_name["name"])
+        cursor.execute("SELECT * FROM `soap_quizz` where subject_id = '{}'".format(subject_id))
+    conn.commit()
+    list_quizz = cursor.fetchall()
+
+    data = []
+
+    for quizz in list_quizz:
+        object_quizz = {
+            'id': quizz["id"],
+            'name': quizz["content"],
+            'time': quizz["time"],
+            'question': []
+        }
+        list_question = get_question_by_quizz(quizz["id"])
+        for question in list_question:
+            object_question = {
+                'id': question['id'],
+                'name': question['content'],
+                'answer': []
+            }
+            list_answer = get_answer_by_question(question['id'])
+            for answer in list_answer:
+                object_answer = {
+                    'id': answer['id'],
+                    'content': answer['content'],
+                    'is_correct': answer['is_correct']
+                }
+                object_question['answer'].append(object_answer)
+            object_quizz['question'].append(object_question)
+        data.append(object_quizz)
+
+    message = {
+        'status': 200,
+        'message': message_send,
+        'data': data
+    }
+
+    response = jsonify(message)
+    response.status_code = 200
+    return response
+
+def get_question_by_quizz(quizz_id):
+    conn = mysql.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    cursor.execute("SELECT * FROM `soap_question` where quizz_id = '{}'".format(quizz_id))
+    conn.commit()
+    list_question = cursor.\
+        fetchall()
+    return list_question
+def get_answer_by_question(question_id):
+    conn = mysql.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    cursor.execute("SELECT * FROM `soap_answer` where question_id = '{}'".format(question_id))
+    conn.commit()
+    list_answer = cursor.fetchall()
+    return list_answer
+
+def get_subject_name(id):
+    conn = mysql.connect()
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    cursor.execute("SELECT * FROM `soap_subjects` where id = '{}'".format(id))
+    conn.commit()
+    subject = cursor.fetchone()
+    if subject is None:
+        return 'Subject does not exist'
+    else:
+        return subject
+
+@app.route("/list-student")
+def list_student():
+    if 'user_id' in session:
+        session.pop('user_id', None)
+    if 'admin_id' in session:
+        return render_template('admin_list_student.html')
+    else:
+        return redirect('/admin')
 if __name__ == '__main__':
     app.run(debug=True)
